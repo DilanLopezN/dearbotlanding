@@ -1,22 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, phone, message } = await req.json();
+    const { name, email, phone, message } = await req.json()
 
     if (!name || !email || !message) {
       return NextResponse.json(
-        { error: "Campos obrigatórios faltando" },
+        { error: 'Campos obrigatórios faltando' },
         { status: 400 }
-      );
+      )
     }
 
     await resend.emails.send({
-      from: `Dear Bot <contato@${process.env.RESEND_DOMAIN || "dearbot.com.br"}>`,
-      to: process.env.EMAIL_TO || "contato@dearbot.com.br",
+      from: `Dear Bot <contato@crievo.tech>`,
+      to: 'dilanlopez009@gmail.com',
       subject: `[Dear Bot] Novo contato: ${name}`,
       replyTo: email,
       html: `
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: bold; color: #666;">WhatsApp:</td>
-              <td style="padding: 8px 0;">${phone || "Não informado"}</td>
+              <td style="padding: 8px 0;">${phone || 'Não informado'}</td>
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: bold; color: #666;">Mensagem:</td>
@@ -41,15 +41,15 @@ export async function POST(req: NextRequest) {
             </tr>
           </table>
         </div>
-      `,
-    });
+      `
+    })
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Resend error:", error);
+    console.error('Resend error:', error)
     return NextResponse.json(
-      { error: "Erro ao enviar e-mail" },
+      { error: 'Erro ao enviar e-mail' },
       { status: 500 }
-    );
+    )
   }
 }
